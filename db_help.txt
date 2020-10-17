@@ -18,6 +18,17 @@ STATUS \s Вывод информации о состоянии сервера
 EXIT   \q выход
        \G вывод результата в вертикальном формате
 
+SOURCE hello.sql -- выполнение файла hello.sql
+
+Файл с учеткой для автоматического подключения
+-----
+my.cnf
+[client]
+user=admin
+passord=admin
+
+mysqldump mysql > mysql.sql -- экспорт базы данных mysql в файл mysql.sql
+mysql mysql < mysql.sql -- импорт данных из mysql.sql в базу данных mysql
 
 create database shop;
 show databases;
