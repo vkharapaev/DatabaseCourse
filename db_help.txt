@@ -50,3 +50,34 @@ describe user 'm%'; -- можно указывать шаблоны для ст�
 SELECT * FROM information_schema.SCHEMATA;
 
 select * from information_schema.TABLES where table_schema = 'shop';
+
+
+--------------------
+---------ДЗ LESSON 1
+--------------------
+
+Задание 2
+create database example;
+create table users(id int, name text);
+mysqldump example > example.sql
+create database sample
+mysql sample < exmaple.sql
+
+Задание 3
+mysqldump --where="1 limit 100" mysql help_keyword > help_keyword.sql
+
+
+----Разбор домашки
+-------------------
+
+create table if not exists users (
+	id SERIAL COMMENT 'Table primary key', -- BigInt, первичный ключ, автоинкремент
+	name VARCHAR(255) COMMENT 'User name'
+);
+
+
+SHOW CREATE TABLE users
+
+SOURCE example.sql
+
+mysqldump --skip-opt --where="1 limit 100" mysql help_keyword > help_keyword.sql    // --skip-opt - сделает несколько insert-ов вместо одного
