@@ -1,0 +1,37 @@
+3306
+33060
+admin
+service MySQL80
+
+root
+
+mysql -u root -h 192.168.0.10 -P 3306 
+
+USE    \u выбор базы данных
+SOURCE \. Выполнение sql-команды из файла
+SYSTEM \! Выполнение команды операционной системы
+STATUS \s Вывод информации о состоянии сервера
+EXIT   \q выход
+       \G вывод результата в вертикальном формате
+
+
+create database shop;
+show databases;
+show variables like 'datadir';
+drop database shop;
+create database if not exists shop;
+use shop
+show tables;
+show tables from mysql; -- указали базу данных mysql
+select mysql.User.User, mysql.User.Host from mysql.User; -- запрос с квалифицированными именами
+mysql shop; -- подключение с одновременным указанием базы данных
+
+create table users (k int);
+create table if not exists users (k int);
+describe users; -- просмотр структуры таблицы
+describe user 'User'; -- оператору можно указать имя столбца
+describe user 'm%'; -- можно указывать шаблоны для сталбцов '_', '%'
+
+SELECT * FROM information_schema.SCHEMATA;
+
+select * from information_schema.TABLES where table_schema = 'shop';
