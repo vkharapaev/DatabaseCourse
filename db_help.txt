@@ -71,8 +71,8 @@ mysqldump --where="1 limit 100" mysql help_keyword > help_keyword.sql
 -------------------
 
 create table if not exists users (
-	id SERIAL COMMENT 'Table primary key', -- BigInt, первичный ключ, автоинкремент
-	name VARCHAR(255) COMMENT 'User name'
+    id SERIAL COMMENT 'Table primary key', -- BigInt, первичный ключ, автоинкремент
+    name VARCHAR(255) COMMENT 'User name'
 );
 
 
@@ -81,3 +81,144 @@ SHOW CREATE TABLE users
 SOURCE example.sql
 
 mysqldump --skip-opt --where="1 limit 100" mysql help_keyword > help_keyword.sql    // --skip-opt - сделает несколько insert-ов вместо одного
+
+
+
+
+--------------------------
+-------- LESSON 2 --------
+--------------------------
+
+Типы данных
+TINYINT   1 byte
+SMALLINT  2 byte
+MEDIUMINT 3 byte
+INT       4 byte
+BIGINT    8 byte
+
+Вещественные
+FLOAT  4 byte 
+DOUBLE 8 byte
+DECIMAL -- более точный тип. обрабатывается дольше всех типов. Число хранится в виде строки. Тип без потери точности
+
+CREATE TABLE tbl(id INT(8)) -- 8 - указывает сколько символов печатать в консоле. необязательный параметр
+'       5' -- пример печати в консоле
+
+CREATE TABLE tbl(id INT(8) ZEROFILL)
+'00000005' -- пример печати в консоле
+
+DECIMAL(7,4) -- под число отводится 7 байт, а под дробную часть 4 байта
+
+CREATE TABLE tbl (price DECIMAL(7,4));
+
+
+Строковые типы:
+CHAR - фиксированная длина
+
+VARCHAR - переменная длина строки, в скобках указвается максимальная длина строки. Максимальная длина 65536
+
+BLOB
+TINYTEXT   2 ^  8 = 256
+TEXT       2 ^ 16 = 65536 
+MEDIUMTEXT 2 ^ 24 = 16777216(16Mb)
+LONGTEXT   2 ^ 32 = 4294967296(4Gb)
+
+create table tbl (
+    name char(10) default 'anonymous',
+    description varchar(255)
+);
+insert into tbl values (default, 'New user');
+insert into tbl values ('Игорь', 'New user');
+
+ALT+X - выполнить скрипт в dbeaver
+
+
+
+Тип NULL
+    Все операции с данным типом приводят к типу NULL
+
+
+create table tbl (id int unsigned);
+alter table tbl change id id int unsigned not null;
+truncate tbl;
+
+
+Каледнарные типы даннх:                                                               
+YEAR - хранит год                                                                   1 byte 0000
+DATE - хранит дату с точностю до дня                                                3 byte 0000-00-00
+TIME - для хранения времени в течение суток                                         3 byte 00:00:00
+TIMESTAMP - также хранит дату и время. занимает в 2 раза меньше                     4 byte 0000-00-00 00:00:00
+   места чем DATETIME, но может хранить даты в ограниченном интевале от 1970-2038гг   
+DATETIME - хранит дату и время                                                      8 byte 0000-00-00 00:00:00
+
+
+select '2018-10-01 0:00:00' - interval 1 day; -- вычли из даты 1 день
+select '2018-10-01 0:00:00' + interval 1 week; -- прибавили 1 неделю к дате 
+select '2018-10-01 0:00:00' + interval 1 year; -- прибавили 1 год к дате 
+
+комбинированные интервалы
+select '2018-10-01 0:00:00' + interval '1-1' year_month; -- прибавили 1 год и 1 месяц к дате 
+
+Enum и Set типы данных
+При создании столбца данного тип значения задаются строковым списком через запятую 'first', 'second', 'third', но значения в столбце хранятся в виде чисел.
+
+alter table tbl add collect json;
+insert into tbl values (1, '{"first":"Hello", "second":"World"}'); -- вставка json Объекта
+select collect->>"$.first" from tbl; -- получение значения поля json Объекта
+
+
+
+Типы индексов:
+Обычные - может быть несколько
+уникальные, первичные - может быть в таблице только один. в строках данного столбца могут храниться только уникальные данные. значения не могут принимать NULL
+полнотекстовые - предназначен для столбцов типа text, позволяющий проводить полнотекстовый поиск. На практике же полнотекстовый поиск осуществляется субд ElasticSearch
+
+
+Включение механизма auto_increment
+insert into catalogs (name) values ('Processors');
+insert into catalogs values (NULL, 'Motherboards');
+insert into catalogs values (0, 'Video cards');
+insert into catalogs values (default, 'Video cards');
+
+
+Псевдотип SERIAL
+SERIAL == BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE
+
+Mysql поддерживает 2 тип индексов BTREE и хэштаблицу
+
+
+CRUD ОПЕРАЦИИ
+--------------
+DELETE FROM catalogs;
+TRUNCATE catalogs; -- очищает таблицу и обнуляет счетчики auto_increment
+
+
+
+--------------------------
+-------- LESSON 3 --------
+--------------------------
+
+'5' + '2' = 7
+5 div 2 = 2 -- целочисленное деление
+5 % 2 = 1 -- остаток от деления
+5 mod 2 = 1 -- остаток от деления
+true и false -- костанты. тип tinyint 1 и 0 соотвественно
+<=> -- безопасное сравнение, позволяет сравнивать со значением NULL, nlow
+not, ! -- отрицание
+2 = NULL -- NULL
+2 != NULL -- NULL
+2 <=> NULL -- 0
+NULL <=> NULL -- 1
+
+create table tbl (
+	x int,
+	y int,
+	summ int as (x + y) -- вычислется при обращении, не сохраняется на диске
+);
+
+
+create table tbl (
+	x int,
+	y int,
+	summ int as (x + y) stored  -- сохраеяется на диске, более того, мы можем его индексировать
+);
