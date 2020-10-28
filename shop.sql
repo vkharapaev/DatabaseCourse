@@ -9,7 +9,8 @@ insert ignore into catalogs values
 	(default, 'Processors'),
 	(default, 'Motherboards'),
 	(default, 'Video cards'),
-	(default, 'Video cards');
+	(default, 'Fans'),
+	(default, 'Radiators');
 
 
 /*
@@ -30,7 +31,17 @@ create table users (
     updated_at datetime default current_timestamp on update current_timestamp
 ) comment = 'Customers';
 
-insert into users (id, name, birthday_at) values(1, 'hello', '1979-01-27');
+insert into users values 
+	(default, 'user1', '1989-05-10', default, default),
+	(default, 'user2', '1989-05-25', default, default),
+	(default, 'user3', '1989-08-12', default, default),
+	(default, 'user4', '1989-08-17', default, default),
+	(default, 'user5', '1989-01-23', default, default),
+	(default, 'user6', '1989-02-15', default, default),
+	(default, 'user7', '1989-09-16', default, default),
+	(default, 'user8', '1989-12-30', default, default);
+	
+	
 
 drop table if exists products;
 create table products (
@@ -97,3 +108,14 @@ create table storehouses_products (
     created_at datetime default current_timestamp,
     updated_at datetime default current_timestamp on update current_timestamp
 ) comment = 'Product available amount in storehouse';
+
+
+insert into storehouses_products values 
+	(default, 1, 1, 2, default, default),
+	(default, 1, 2, 5, default, default),
+	(default, 1, 3, 4, default, default),
+	(default, 1, 4, 0, default, default),
+	(default, 1, 5, 0, default, default),
+	(default, 1, 6, 50, default, default),
+	(default, 1, 7, 7, default, default),
+	(default, 1, 8, 0, default, default);

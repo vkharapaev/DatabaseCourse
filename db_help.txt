@@ -222,3 +222,103 @@ create table tbl (
 	y int,
 	summ int as (x + y) stored  -- сохраеяется на диске, более того, мы можем его индексировать
 );
+
+between 1 and 100
+not between 10 and 70
+
+select 2 in (0, null, 5, 'str') -- null
+not in 
+
+\% -- чтобы вывести %
+\_ -- чтобы вывести _
+
+
+
+RLIKE или REGEXP -- регулярные выражения
+
+LIMIT 3, 4 -- 3 - позиция, начиная с которой необходимо вернуть результат, 4 - количество извлекаемых записей
+LIMIT 4 OFFSET 3 -- тоже самоей
+
+select distinct catalog_id from products order by catalog_id
+
+
+----
+---- МЕТОДЫ
+----
+
+NOW() -- текущее время и дата. за время запроса вычиляется только один раз, не зависимо от количества вызовов этого метода
+
+DATE(date) -- отрезает время
+DATE_FORMAT('2018-06-12 01:59:59', 'На дворе %Y год') -- на дворе 2018 год
+DATE_FORMAT(birthday_at, '%d.%m.%Y') as birthday_at
+
+UNIXSTAMP -- данный формат даты числовой, обрабатывается быстро, можно идексировать и занимает меньше места 4 байта, DATETIME - 8байт. Хранит даты от 1970 по 2038 год
+
+UNIX_TIMESTAMP() -- преобразование в UNIXSTAMP
+FROM_UNIXTIME() -- преобразование из UNIXSTAMP
+
+SELECT UNIX_TIMESTAMP('2018-10-1O 10:09:23') AS TIMESTAMP, FROM_UNIXTIME(1539155363) AS DATETIME; -- 1539155363, 2018-10-1O 10:09:23
+
+TO_DAYS() -- получение количесва дней 
+FLOOR() -- избавление от дробной части
+
+TIMESTAMPDIFF(YEAR, birthday_at, now()) -- более точный вариант
+
+select * from users order by RAND() -- вывод строк в случайном порядке
+
+VERSION() -- текущая версия MySQL сервера
+
+LAST_INSERT_ID() -- последний id вычисленный автоинкриментом
+
+DATABASE() -- возвращает текущую выбранную базу данных
+
+USER() -- текущий пользователь
+
+
+---------МАТЕМАТИЧЕСКИЕ ФУНКЦИИ
+
+SQRT() -- квадратный корень числа
+
+
+create table distances (
+	id SERIAL PRIMARY KEY,
+	x1 INT NOT NULL,
+	x2 INT NOT NULL,
+	y1 INT NOT NULL,
+	y2 INT NOT NULL,
+	distance DOUBLE AS (SQRT(POW(x1 - x2, 2) + POW(y1 -y2, 2)))
+) COMMENT = 'Расстояние между двумя точками';
+
+create table distances (
+	id SERIAL PRIMARY KEY,
+	a JSON NOT NULL,
+	b JSON NOT NULL,
+	distance DOUBLE AS (SQRT(POW(a->>'$.x' - b->>'$.x', 2)+POW(a->>'$.y' - b->>'$.y', 2)))
+) COMMENT = 'Расстояние между двумя точками';
+
+
+square DOUBLE AS (a * b * SIN(RADIANS(angle))/2.0)
+
+alter table triangles change square square DOUBLE AS (ROUND(a * b * SIN(RADIANS(angle))/2.0))
+
+ROUND() -- математическое округление
+CEILING() -- округление в большую сторону 
+
+------ СТРОКОВЫЕ ФУНКЦИИ
+SUBSTRING(name, 1, 5) -- получение подстроки, 1 - позиция начала, 5 - количество извлекаемых символов
+CONCAT() -- объединение строк
+
+IF(TRUE, 'истина', 'ложь') -- функция условия
+
+select 
+	case 
+		when color = 'red' then 'красный'
+		when color = 'orange' then 'оранжевый'
+		else 'фиолетовый'
+	end
+
+
+INET_ATON('62.145.69.10') -- представление IP адреса ввиде целого числа
+INET_NTOA() -- решает обратную задачу
+
+UUID() -- возвращает универсальный уникальный идетификатор
