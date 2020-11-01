@@ -32,14 +32,14 @@ create table users (
 ) comment = 'Customers';
 
 insert into users values 
-	(default, 'user1', '1989-05-10', default, default),
-	(default, 'user2', '1989-05-25', default, default),
-	(default, 'user3', '1989-08-12', default, default),
-	(default, 'user4', '1989-08-17', default, default),
-	(default, 'user5', '1989-01-23', default, default),
-	(default, 'user6', '1989-02-15', default, default),
-	(default, 'user7', '1989-09-16', default, default),
-	(default, 'user8', '1989-12-30', default, default);
+	(default, 'user1', '1990-05-10', default, default),
+	(default, 'user2', '1996-05-25', default, default),
+	(default, 'user3', '1995-08-12', default, default),
+	(default, 'user4', '1964-08-17', default, default),
+	(default, 'user5', '1978-01-23', default, default),
+	(default, 'user6', '1991-02-15', default, default),
+	(default, 'user7', '1998-09-16', default, default),
+	(default, 'user8', '1980-12-30', default, default);
 	
 	
 
