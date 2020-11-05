@@ -352,7 +352,78 @@ CONCAT_WS('-', 2019,  10, 31); -- 2019-10-31
 - вложенные запросы 
 - соединение (join)
 
-Опрерации с множествами
+1) Опрерации над множествами
 - union (поддержано MYSQL)
-- except
-- intersect
+- except - разность
+- intersect - пересечение
+
+2) Вложенные запросы
+select id, <SUBQUERY> from <SUBQUERY> where <SUBQUERY> group by id having <SUBQUERY>
+
+3) Тип JOIN соединений
+- join (inner join)
+- left join - слева допускаются NULL
+- right join - справа допускаются NULL
+- outer join (неподдержано MYSQL)
+
+
+UNION (ALL OR DESTINCT)
+ORDER BY действует на весь результат запроса с оператором UNION, а не на отдельные таблицы
+Для LIMIT выполняется тоже самое
+Это можно обойти с помощью вложенных запросов, например
+(select name from catalogs order by name desc limit 2) union all (select name from rubrics order by name desc limit 2)
+Первый SELECT запрос определяет название стобцов
+UNION запросы выполняются долго. Почти всегда промежуточная таблица размещается на жестком диске, следовательно сортировка и фильтрация также будет выполняться во временном файле. Следует указвать только необходимые стоблы в запросе. Чем меньше столбцов, тем меньше размер промежуточной таблицы и тем быстрее проходят операции с ней.
+
+
+Кореллированный запрос - если вложенный запрос использует столбец из внешнего запроса. Субд вынуждена вычислять подзапрос для каждой строки запроса, что может быть накладно для объемных таблиц.
+
+Если подзапрос возвращает более одного результата, то будет ошибка. В таких случаях можно использовать например оператор IN (это оператор равенства в отношении множеств)
+
+select * from products where catalog_id = 2 and price < ANY (select price from products where catalog_id = 1)
+
+
+condition operator ANY или SOME - выражение считается истиным, если хотя бы одно из значений true
+condition operator ALL - выражение считается истиным, если все значения true
+
+[not] exists - используется для проверки, есть ли во вложенном запросе записи. возвращает TRUE/FALSE
+
+
+MYSQL реализованы строчные запросы, т.е. подзапросы, которые возвращают более одного стоблца
+
+select id, name, price, catalog_id from products where (catalog_id, 5060.00) in (select id, price from catalogs); -- где (catalog_id, 5060.00) - коструктор строки, его можно записывать с помощью ключевого слова RAW(catalog_id, 5060.00)
+
+Декартово произведение
+select * from tbl1, tbl2
+select * from tbl1 join tbl2
+
+
+select p.name, p.price, c.name from catalogs as c join products as p where c.id = p.catalog_id
+select p.name, p.price, c.name from catalogs as c join products as p on c.id = p.catalog_id
+
+Условивие в ON отрабатывает в момент соединения таблиц, т.е. промежуточная таблица сразу получается небольшой, в то время как WHERE условие действует после соединения, сначала получам декартово произведение затем выполняется фильтрация
+
+Запросы с самообъединением таблиц - запрос в которых одна и таже таблица подключается 2 и более раз.
+
+Когда название стоблцов таблиц по которым выполняется объединение равны, то можно вместо ON использовать USING(название стобца)
+select * from catalogs as fst join catalogs as snd USING(id);
+
+
+Многотабличный запрос можно использовать для обновления или удаления данных
+select catalogs join products on catalogs.id = products.catalog_id set price = price * 0.9 where catalogs.name = 'Мат.платы';
+delete products, catalogs from catalogs join products on catalogs.id = products.catalog_id where catalogs.name = 'Мат.платы'; -- удалятся записи из обоих таблиц
+delete products from catalogs join products on catalogs.id = products.catalog_id where catalogs.name = 'Мат.платы'; -- удалятся записи только из products 
+
+ОГРАНИЧЕНИЕ ВНЕШНЕГО КЛЮЧА
+
+foreign key (col1, ...) references tbl (tbl_col, ...) [on delete ...] [on update ...]
+
+cascade - удалит или обновить при изменении родителя
+set null - установить в Null при удалении или обновлении родителя
+no action - оставить как есть при удалении или обновлении родителя
+restrict - запретить удаление, если в дочерней таблице есть записи ссылающиейся на родителя
+set default - установиь DEFAULT значение при удалении или обновлении родителя
+
+alter table products add foreign key (catalog_id) references catalogs(id) on delete no action on update no action; -- имя задастся автоматически
+alter table products add constraint fk_catalog_id foreign key (catalog_id) references catalogs(id) on delete no action on update no action;
+alter table products drop foreign key products_ibfk_1;
