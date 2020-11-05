@@ -365,8 +365,8 @@ select id, <SUBQUERY> from <SUBQUERY> where <SUBQUERY> group by id having <SUBQU
 
 3) Тип JOIN соединений
 - join (inner join)
-- left join - слева допускаются NULL
-- right join - справа допускаются NULL
+- left join - справа допускаются NULL
+- right join - слева допускаются NULL
 - outer join (неподдержано MYSQL)
 
 

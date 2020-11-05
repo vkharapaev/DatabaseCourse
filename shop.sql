@@ -61,7 +61,10 @@ create table products (
 insert into products values 
 	(default, 'itel i3', 'the best processor', 100, 1, default, default),
 	(default, 'itel i5', 'the best processor', 200, 1, default, default),
-	(default, 'itel i7', 'the best processor', 300, 1, default, default);
+	(default, 'itel i7', 'the best processor', 300, 1, default, default),
+	(default, 'mouse r1', 'the best mouse', 100, null, default, default),
+	(default, 'mouse r1', 'the best mouse', 200, null, default, default),
+	(default, 'mouse r1', 'the best mouse', 300, null, default, default);
 
 drop table if exists orders;
 create table orders (
