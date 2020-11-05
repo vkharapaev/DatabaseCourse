@@ -211,16 +211,16 @@ not, ! -- отрицание
 NULL <=> NULL -- 1
 
 create table tbl (
-	x int,
-	y int,
-	summ int as (x + y) -- вычислется при обращении, не сохраняется на диске
+    x int,
+    y int,
+    summ int as (x + y) -- вычислется при обращении, не сохраняется на диске
 );
 
 
 create table tbl (
-	x int,
-	y int,
-	summ int as (x + y) stored  -- сохраеяется на диске, более того, мы можем его индексировать
+    x int,
+    y int,
+    summ int as (x + y) stored  -- сохраеяется на диске, более того, мы можем его индексировать
 );
 
 between 1 and 100
@@ -281,19 +281,19 @@ SQRT() -- квадратный корень числа
 
 
 create table distances (
-	id SERIAL PRIMARY KEY,
-	x1 INT NOT NULL,
-	x2 INT NOT NULL,
-	y1 INT NOT NULL,
-	y2 INT NOT NULL,
-	distance DOUBLE AS (SQRT(POW(x1 - x2, 2) + POW(y1 -y2, 2)))
+    id SERIAL PRIMARY KEY,
+    x1 INT NOT NULL,
+    x2 INT NOT NULL,
+    y1 INT NOT NULL,
+    y2 INT NOT NULL,
+    distance DOUBLE AS (SQRT(POW(x1 - x2, 2) + POW(y1 -y2, 2)))
 ) COMMENT = 'Расстояние между двумя точками';
 
 create table distances (
-	id SERIAL PRIMARY KEY,
-	a JSON NOT NULL,
-	b JSON NOT NULL,
-	distance DOUBLE AS (SQRT(POW(a->>'$.x' - b->>'$.x', 2)+POW(a->>'$.y' - b->>'$.y', 2)))
+    id SERIAL PRIMARY KEY,
+    a JSON NOT NULL,
+    b JSON NOT NULL,
+    distance DOUBLE AS (SQRT(POW(a->>'$.x' - b->>'$.x', 2)+POW(a->>'$.y' - b->>'$.y', 2)))
 ) COMMENT = 'Расстояние между двумя точками';
 
 
@@ -311,11 +311,11 @@ CONCAT() -- объединение строк
 IF(TRUE, 'истина', 'ложь') -- функция условия
 
 select 
-	case 
-		when color = 'red' then 'красный'
-		when color = 'orange' then 'оранжевый'
-		else 'фиолетовый'
-	end
+    case 
+        when color = 'red' then 'красный'
+        when color = 'orange' then 'оранжевый'
+        else 'фиолетовый'
+    end
 
 
 INET_ATON('62.145.69.10') -- представление IP адреса ввиде целого числа
@@ -342,3 +342,17 @@ ANY_VALUE() -- возвращает случайное значение груп
 WITH ROLLUP -- для подведения итогов по сгруппированным данным.
 
 CONCAT_WS('-', 2019,  10, 31); -- 2019-10-31
+
+
+--------------------------
+-------- LESSON 5 --------
+--------------------------
+Типы многотабличных запросов
+- объединения (union)
+- вложенные запросы 
+- соединение (join)
+
+Опрерации с множествами
+- union (поддержано MYSQL)
+- except
+- intersect
