@@ -30,6 +30,9 @@ passord=admin
 mysqldump mysql > mysql.sql -- экспорт базы данных mysql в файл mysql.sql
 mysql mysql < mysql.sql -- импорт данных из mysql.sql в базу данных mysql
 
+CREATE DATABASE shop CHARACTER SET utf8 COLLATE utf8_general_ci;
+drop database shop;
+
 create database shop;
 show databases;
 show variables like 'datadir';
@@ -367,7 +370,7 @@ select id, <SUBQUERY> from <SUBQUERY> where <SUBQUERY> group by id having <SUBQU
 - outer join (неподдержано MYSQL)
 
 
-UNION (ALL OR DESTINCT)
+UNION (ALL OR distinct)
 ORDER BY действует на весь результат запроса с оператором UNION, а не на отдельные таблицы
 Для LIMIT выполняется тоже самое
 Это можно обойти с помощью вложенных запросов, например

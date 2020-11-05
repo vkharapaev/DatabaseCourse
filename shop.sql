@@ -6,11 +6,11 @@ create table catalogs (
 ) comment = 'Internet shop catalogs';
 
 insert ignore into catalogs values
-	(default, 'Processors'),
-	(default, 'Motherboards'),
-	(default, 'Video cards'),
-	(default, 'Fans'),
-	(default, 'Radiators');
+	(1, 'Processors'),
+	(2, 'Motherboards'),
+	(3, 'Video cards'),
+	(4, 'Fans'),
+	(5, 'Radiators');
 
 
 /*
@@ -32,14 +32,14 @@ create table users (
 ) comment = 'Customers';
 
 insert into users values 
-	(default, 'user1', '1990-05-10', default, default),
-	(default, 'user2', '1996-05-25', default, default),
-	(default, 'user3', '1995-08-12', default, default),
-	(default, 'user4', '1964-08-17', default, default),
-	(default, 'user5', '1978-01-23', default, default),
-	(default, 'user6', '1991-02-15', default, default),
-	(default, 'user7', '1998-09-16', default, default),
-	(default, 'user8', '1980-12-30', default, default);
+	(1, 'user1', '1990-05-10', default, default),
+	(2, 'user2', '1996-05-25', default, default),
+	(3, 'user3', '1995-08-12', default, default),
+	(4, 'user4', '1964-08-17', default, default),
+	(5, 'user5', '1978-01-23', default, default),
+	(6, 'user6', '1991-02-15', default, default),
+	(7, 'user7', '1998-09-16', default, default),
+	(8, 'user8', '1980-12-30', default, default);
 	
 	
 
@@ -58,6 +58,11 @@ create table products (
 -- create index index_of_catalog_id using hash on products (catalog_id);
 -- drop index index_of_catalog_id on products;
 
+insert into products values 
+	(default, 'itel i3', 'the best processor', 100, 1, default, default),
+	(default, 'itel i5', 'the best processor', 200, 1, default, default),
+	(default, 'itel i7', 'the best processor', 300, 1, default, default);
+
 drop table if exists orders;
 create table orders (
     id serial primary key,
@@ -66,6 +71,14 @@ create table orders (
     updated_at datetime default current_timestamp on update current_timestamp,
     key index_of_user_id (user_id)
 ) comment = 'Orders';
+
+insert into orders values
+	(null, 1, null, null),
+	(null, 1, null, null),
+	(null, 2, null, null),
+	(null, 3, null, null),
+	(null, 4, null, null),
+	(null, 4, null, null);
 
 drop table if exists orders_products;
 create table orders_products (
