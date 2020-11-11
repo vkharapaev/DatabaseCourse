@@ -430,3 +430,9 @@ set default - установиь DEFAULT значение при удалени�
 alter table products add foreign key (catalog_id) references catalogs(id) on delete no action on update no action; -- имя задастся автоматически
 alter table products add constraint fk_catalog_id foreign key (catalog_id) references catalogs(id) on delete no action on update no action;
 alter table products drop foreign key products_ibfk_1;
+
+--------------------------
+-------- LESSON 6 --------
+--------------------------
+
+START TRANSACTION;
