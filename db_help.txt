@@ -544,3 +544,37 @@ drop prepare prd; -- удаление запроса
 Более гибкое управление правами доступа к таблицам. Также можно запретить прямое обращение пользователей к таблицам и разрешить только к представлениям. Также позволяют обеспечить совместимость программ ориентирующихся на старую структуру данных
 create view cat as select * from catalogs order by name;
 create view cat_reverse (catalog, catalog_id) as select name, id from catalogs;
+create or replace view namecat (id, name, total) as select id, name, length(name) from catalogs;
+Алгоритм формирования конечного запроса
+- merge - 
+- temptable - результирующая таблица представления помещается во временную таблицу, которая затем используется в конечном запросе
+- undefined - mysql самостоятельно выбирает алгоритм, предпочитая использовать merge и прибегает к temptable только в случае необходимости
+По умолчанию используется UNDEFINED
+
+create algorithm = temptable view cat2 as select * from catalogs;
+
+Скрытие столбцов в таблицы в представлении такие представления называются ВЕРТИКАЛЬНЫМИ
+
+create or replace view prod as select id, name, price, catalog_id from products order by catalog_id, name; 
+
+select * from prod order by name desc; -- можно использовать условие в запросе с представлением
+
+
+ГОРИЗОТАЛЬНЫЕ ПРЕДСТАВЛЕНИЯ -- ограничивают доступ пользователям к строкам таблицы
+
+create or replace view processors as select id, name, price, catalog_id from products where catalog_id = 1;
+
+На практике могут встречаться СМЕШЕННЫЕ ПРЕДСТАВЛЕНИЯ
+
+Чтобы можно было вставлять данные в представление командой INSERT и обнавалять существующие записи командой UPDATE, необходимо при создании представления использовать конструкцию WITH CHECK OPTION. Во время вставки проверяется, чтобы вставляемые данные удовлетворяли WHERE условию запроса, лежащего в основе представления
+
+create table tbl1 (value varchar(255));
+create view v1 as select * from tbl1 where value < 'fst5' with check option;
+insert into tbl1 values ('fst1'), ('fst2'), ('fst3');
+insert into v1 values ('fst4');
+insert into v1 values ('fst5'); -- ошибка
+
+alter view v1 as select * from tbl1 where value > 'fst4' with check option; -- редактирование представления
+либо воспозоваться create or replcace view
+drop view -- удаляет представление
+drop view if exists cat, cat_reverse;
