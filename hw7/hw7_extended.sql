@@ -1,7 +1,7 @@
 -- задание 1
 drop user if exists shop_read;
 create user shop_read;
-grant select on shop.* to shop_read;
+grant select, show view on shop.* to shop_read;
 drop user if exists shop;
 create user shop;
 grant all on shop.* to shop;
@@ -14,4 +14,4 @@ drop view if exists username;
 create view username as select id, name from accounts;
 drop user if exists shop_read;
 create user shop_read;
-grant select on shop.username to shop_read;
+grant select(id, name) on shop.username to shop_read;
