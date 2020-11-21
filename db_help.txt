@@ -896,3 +896,137 @@ insert ignore into catalogs values
 Идея МАСТЕР-МАСТРЕ репликации может быть распространена на множество серверов
 
 Например, ТОПОЛОГИЯ КОЛЬЦО, но такая топология не рекомендуется, т.к. тяжело восстанавливается после сбоя.
+
+--------------------------
+-------- LESSON 8 --------
+--------------------------
+
+CREATE PROCEDURE procedure_name
+CREATE FUNCTION function_name
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS shop.my_version$$
+CREATE PROCEDURE shop.my_version()
+BEGIN
+    SELECT VERSION(); 
+END
+
+CALL my_version();
+
+show procedure status; --- список хранимых процедур
+show procedure status like 'my_version%'\G
+
+select name, type from mysql.proc limit 10; -- список процедур
+
+show create procedure my_version\G
+
+
+DELIMITER $$
+drop function if exists get_version$$
+create function get_version() returns text 
+begin
+    return version();
+end
+
+deterministic -- означает, что функция возвращает одно и тоже значение, т.е. его можно закешировать
+not deterministic -- нужен если например функция возвращает случайное значение
+
+Типы параметров (только для процедур, для функций всегда IN)
+-- IN
+-- OUT
+-- INOUT
+
+Если не указать, то по умолчанию будет IN
+
+Локальные переменные:
+create procedure declare_var()
+begin
+    declare id, num int(11) default 0;
+    declare name, hello, temp tinytext;
+end;
+
+Присвоение значения локальной переменной:
+procedur p(seconds int)
+begin
+    declare days;
+    set days = floor(seconds / 86400);
+end
+
+case var
+    when '123' then
+    when '456' then
+    else 
+end case;
+
+Циклы:
+-- WHILE
+-- REPEAT
+-- LOOP
+
+while condition do
+    .... some code
+end while;
+
+
+cycle: while condition do
+    if condition_2 then leave cycle; -- досрочный выход из цикла
+end while cycle;
+
+cycle: while condition do
+    if condition_2 then iterate cycle; -- досрочное завершени итерации
+    end if;
+end while cycle;
+
+repeat 
+    ... do something
+until i < 0
+end repeat;
+
+
+loop
+
+end loop
+
+
+Обработчик исключения:
+begin
+    declare continue handler for sqlstate '23000' set @error = 'Ошибка вставки значения';
+    insert into catalogs values (id, name);
+    if @error is not null then
+        select @error;
+    end if;
+end;
+
+
+Курсор
+declare curcat cursor for select * from catalogs; 
+open curcat;
+fetch curcat into id, name;
+close curcat;
+
+Триггеры:
+create trigger catalogs_count after insert on catalogs
+for each row
+begin
+    select count(*) into @total from catalogs;
+end;
+
+show triggers; -- отобразить триггеры
+
+drop trigger catalogs_count; -- удаление
+
+В триггерах есть спец переменные NEW, OLD, т.е. новая и старая записи
+
+Предотвращение операции с помощью ТРИГГЕРА
+
+Запретим удаление последней записи из таблицы
+create trigger check_last_catalogs before delete on catalogs
+for each row begin
+    declare total int;
+    select count(*) from catalogs;
+    if total <= 1 then 
+        signal sqlstate '4500' set message_text = 'delete canceled'; -- генерируем собственную ошибку
+    end if;
+end;
+
+4500 -- пользовательские ошибки, их нельзя перехватить с помощью обработчиков
