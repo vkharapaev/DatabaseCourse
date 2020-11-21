@@ -2,7 +2,7 @@
 create function hello() returns text
 begin
   declare t time default current_time();
-  if t >= TIME'06:00:0' and t < TIME'12:00:00' then
+  if t >= TIME'06:00:00' and t < TIME'12:00:00' then
     return 'Доброе утро';
   elseif t >= TIME'12:00:00' and t < TIME'18:00:00' then
     return 'Добрый день';
@@ -37,7 +37,7 @@ begin
   declare prev1, res int default 0;
   declare prev2, counter int default 1;
   if num < 2 then
-    return num;
+    return greatest(num, 0);
   end if;
   repeat
     set res = prev1 + prev2;
