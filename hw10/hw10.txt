@@ -1,0 +1,46 @@
+-- задание 1
+Для этого хорошо подходит тип Hash. В ключе пары можно хранить ip адрес, а в значении - количество посещений.
+
+-- задание 2
+Тип Hash подходит для поиска имени пользователя по email
+hmset userByEmail qwre@gmail.com user1 zxvc@gmail.com user1 emails hjkl@gmail.com user2 emails vbnm@gmail.com user2
+hget userByEmail qwre@gmail.com  -- вернет user1
+
+Тип List подходит для поиска email-ов по имени пользователя
+rpush emailsByUser:user1 qwre@gmail.com zxvc@gmail.com
+rpush emailsByUser:user2 hjkl@gmail.com vbnm@gmail.com
+lrange emailByUser:user1 0 -1 -- вернет список email-ов пользователя user1
+
+-- задание 3
+db.catalogs.insertMany([
+    {
+        name: 'Processors',
+        products : [
+            {
+                name: 'itel i3',
+                description: 'a good processor',
+                price: '10000'
+            },
+            {
+                name: 'itel i5',
+                description: 'the best processor',
+                price: '50000'
+            }
+        ]
+    },
+    {
+        name: 'Mice',
+        products: [
+            {
+                name: 'razer mamba',
+                description: 'a good mouse',
+                price: '400'
+            },
+            {
+                name: 'razer naga',
+                description: 'the best mouse',
+                price: '800'
+            },
+        ]
+    }
+])
